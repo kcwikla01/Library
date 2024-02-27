@@ -9,7 +9,6 @@ import library.exception.DataImportException;
 import library.exception.NoSuchOptionException;
 import library.exception.UserAlreadyExistsException;
 import library.model.*;
-import library.model.Comparator.AlphabeticalTitleComparator;
 
 import java.io.IOException;
 import java.util.Comparator;
@@ -41,37 +40,28 @@ class LibraryControl {
             printOptions();
             option = getOption();
             switch (option) {
-                case ADD_BOOK:
-                    addBook();
-                    break;
-                case ADD_MAGAZINE:
-                    addMagazine();
-                    break;
-                case PRINT_BOOKS:
-                    printBooks();
-                    break;
-                case PRINT_MAGAZINES:
-                    printMagazines();
-                    break;
-                case DELETE_BOOK:
-                    deleteBook();
-                    break;
-                case DELETE_MAGAZINE:
-                    deleteMagazine();
-                    break;
-                case ADD_USER:
-                    addUser();
-                    break;
-                case PRINT_USERS:
-                    printUsers();
-                    break;
-                case EXIT:
-                    exit();
-                    break;
-                default:
-                    printer.printLine("Nie ma takiej opcji, wprowadź ponownie: ");
+                case ADD_BOOK -> addBook();
+                case ADD_MAGAZINE -> addMagazine();
+                case PRINT_BOOKS -> printBooks();
+                case PRINT_MAGAZINES -> printMagazines();
+                case DELETE_BOOK -> deleteBook();
+                case DELETE_MAGAZINE -> deleteMagazine();
+                case ADD_USER -> addUser();
+                case PRINT_USERS -> printUsers();
+                case FIND_PUBLICATION -> findPublication();
+                case EXIT -> exit();
+                default -> printer.printLine("Nie ma takiej opcji, wprowadź ponownie: ");
             }
         } while (option != Option.EXIT);
+    }
+
+    private void findPublication() {
+        printer.printLine("Podaj tytuł publikacji");
+        String title=dataReader.getString();
+        String notFoundMessage="Brak publikacji o takim tytule";
+        library.findPublicationByTitle(title)
+                .map(Publication::toString)
+                .ifPresentOrElse(System.out::println,()-> System.out.println(notFoundMessage));
     }
 
     private void printUsers() {
@@ -198,7 +188,8 @@ class LibraryControl {
         DELETE_BOOK(5,"Usuń książkę"),
         DELETE_MAGAZINE(6,"Usuń magazyn"),
         ADD_USER(7,"Dodaj czytelnika"),
-        PRINT_USERS(8,"Wyswietl czytelników");
+        PRINT_USERS(8,"Wyswietl czytelników"),
+        FIND_PUBLICATION(9,"Wyszukaj publikację ");
 
 
         private int value;
